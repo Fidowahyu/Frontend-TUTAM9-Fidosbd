@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
+// Use environment variables with fallback for API URL
+const API_URL = import.meta.env.VITE_API_URL || 'https://backend-tutam-9-sbdfido.vercel.app/';
+
 export default function App() {
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState('');
@@ -14,7 +17,7 @@ export default function App() {
 
   const fetchTodos = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/todos');
+      const res = await axios.get(`${API_URL}/api/todos`);
       setTodos(res.data);
     } catch (err) {
       console.error('Gagal memuat todos:', err);
@@ -25,7 +28,7 @@ export default function App() {
     e.preventDefault();
     if (!title.trim()) return;
     try {
-      await axios.post('http://localhost:5000/api/todos', { title });
+      await axios.post(`${API_URL}/api/todos`, { title });
       setTitle('');
       fetchTodos();
     } catch (err) {
@@ -35,7 +38,7 @@ export default function App() {
 
   const toggleComplete = async (id, currentStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/todos/${id}`, {
+      await axios.put(`${API_URL}/api/todos/${id}`, {
         completed: !currentStatus,
       });
       fetchTodos();
@@ -46,7 +49,7 @@ export default function App() {
 
   const deleteTodo = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/todos/${id}`);
+      await axios.delete(`${API_URL}/api/todos/${id}`);
       fetchTodos();
     } catch (err) {
       console.error('Gagal menghapus todo:', err);
